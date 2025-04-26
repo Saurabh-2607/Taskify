@@ -1,4 +1,3 @@
-export default AuthMiddleware;
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import User from "../models/auth/UserModel.js";
