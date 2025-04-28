@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const TasksContext = createContext();
 
-const serverUrl = "https://Taskify.onrender.com/api/v1";
+const serverUrl = "https://taskify-ga4w.onrender.com/api/v1";
 
 export const TasksProvider = ({ children }) => {
   const userId = useUserContext().user._id;
