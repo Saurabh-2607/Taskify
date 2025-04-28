@@ -44,10 +44,68 @@ export const createTask = asyncHandler(async (req, res) => {
 export const getTasks = asyncHandler(async (req, res) => {
     try {
         const tasks = await TaskModel.find({ user: req.user._id });
-        res.status(200).json(tasks);
+        res.status(200).json(
+            {
+                length: tasks.length,
+                tasks,
+            }
+        );
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching tasks', error: error.message });
     }
 });
 
+export const getTask = asyncHandler(async (req, res) => {
+    try {
+        const  userId = req.user._id;
+        const {id} = req.params;
 
+        if (!id) {
+            return res.status(400).json({ message: 'Task ID is required' });
+        }
+        const task = await TaskModel.findOne({ _id: id, user: userId });
+        
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.status(200).json(task);
+
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching task', error: error.message });
+    }
+}
+);
+
+export const updateTask = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, dueDate, status, priority } = req.body;
+
+        if (!id) {
+            return res.status(400).json({ message: 'Task ID is required' });
+        }
+
+        const task = await TaskModel.findOne({ _id: id, user: req.user._id });
+
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        task.title = title || task.title;
+        task.description = description || task.description;
+        task.dueDate = dueDate || task.dueDate;
+        task.status = status || task.status;
+        task.priority = priority || task.priority;
+        task.completed = completed || task.completed;
+
+        await task.save();
+
+        res.status(200).json({
+            message: 'Task updated successfully',
+            task,
+        });
+
+    } catch (error) {
+        return res.status(500).json({ message: 'Error updating task', error: error.message });
+    }
+});
