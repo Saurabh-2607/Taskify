@@ -9,5 +9,6 @@
     },
     "hide-files.files": [
         ".vscode"
-    ]
+    ],
+    "postman.settings.dotenv-detection-notification-visibility": false
 }
